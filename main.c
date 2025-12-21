@@ -173,6 +173,7 @@ void actionNode(int player)
              break;
              
         case SMMNODE_TYPE_LABORATORY:
+             smm_players[player].energy += energy;
              if (smm_players[player].flag_experiment == 1)
              {
                  int dice = rand()%MAX_DIE + 1;
@@ -226,6 +227,8 @@ void actionNode(int player)
         {
              int i = rand()%smm_festival_nr;
              void *festival = smmdb_getData(LISTNO_FESTCARD, i);
+             
+             printf("Festival Mission: %s\n", smmObj_getObjectName(festival));
         }     
              break;
              
@@ -269,7 +272,8 @@ int main(int argc, const char * argv[]) {
         void* ptr;
         printf("%s %i %i %i\n", name, type, credit, energy);
         ptr = smmObj_genObject(name, SMMNODE_OBJTYPE_BOARD, type, credit, energy, 0);
-        smm_board_nr = smmdb_addTail(LISTNO_NODE, ptr); 
+        smmdb_addTail(LISTNO_NODE, ptr);
+        smm_board_nr++;
     }
     fclose(fp);
     printf("Total number of board nodes : %i\n", smm_board_nr);
@@ -290,7 +294,8 @@ int main(int argc, const char * argv[]) {
         void *ptr;
         printf("%s %d\n", name, energy);
         ptr = smmObj_genObject(name, SMMNODE_OBJTYPE_FOOD, 0, 0, energy, 0);
-        smm_food_nr = smmdb_addTail(LISTNO_FOODCARD, ptr);
+        smmdb_addTail(LISTNO_FOODCARD, ptr);
+        smm_food_nr++;
     }
     fclose(fp);
     printf("Total number of food cards : %i\n", smm_food_nr);
@@ -311,7 +316,8 @@ int main(int argc, const char * argv[]) {
         void *ptr;
         printf("%s\n", name);
         ptr = smmObj_genObject(name, SMMNODE_OBJTYPE_FEST, 0, 0, 0, 0);
-        smm_festival_nr = smmdb_addTail(LISTNO_FESTCARD, ptr);
+        smmdb_addTail(LISTNO_FESTCARD, ptr);
+        smm_festival_nr++;
     }
     fclose(fp);
     printf("Total number of festival cards : %i\n\n", smm_festival_nr);
