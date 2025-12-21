@@ -87,6 +87,7 @@ void goForward(int player, int step)
     for (i=0;i<step;i++)
     {
         smm_players[player].pos = (smm_players[player].pos + 1)%smm_board_nr;
+        ptr = smmdb_getData(LISTNO_NODE, smm_players[player].pos);
         printf(" => moved to %i(%s)\n", smm_players[player].pos,
                                         smmObj_getObjectName(ptr));
     }
@@ -157,6 +158,13 @@ void actionNode(int player)
         case SMMNODE_TYPE_LECTURE:
         if(findGrade(player,smmObj_getObjectName(ptr)) == NULL)
         {
+             if (smm_players[player].energy < energy)
+             {
+                  printf("Not enough energy to take %s (need %d, current %d)\n",
+                              smmObj_getObjectName(ptr), energy, smm_players[player].energy);
+                  break;
+             }
+             
              smm_players[player].credit += credit;
              smm_players[player].energy -= energy;
              
@@ -166,6 +174,7 @@ void actionNode(int player)
                                      type, credit, energy, grade);
              smmdb_addTail(LISTNO_OFFSET_GRADE+player, gradePtr);
         }
+        
              break;
              
         case SMMNODE_TYPE_RESTAURANT:
